@@ -1,6 +1,9 @@
 package com.capgemini.payrollservice;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,5 +35,23 @@ public class EmployeePayrollServiceTest {
 		Assert.assertEquals(3, entries);
 		System.out.println("No of employees in the payroll are : " + entries);
 
+	}
+	
+	@Test
+	public void given3Employees_WhenReadPayrollEntriesFromFile_ShouldPassTheTest() {
+		EmployeePayrollData[] arrayOfEmps = {new EmployeePayrollData(1, "Jeff Bezos", 10000.0),
+				new EmployeePayrollData(2, "Bill Gates", 15000.0),
+				new EmployeePayrollData(3, "Dan Bilzerian", 10500.0)};
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		employeePayrollService.writeEmployeePayrollData(IOService.FILE_IO);
+		List<EmployeePayrollData> payrollData = new ArrayList<>();
+		payrollData = employeePayrollService.readPayroll(IOService.FILE_IO);
+		System.out.println("The payroll details fetched from the file are : " + payrollData);
+		EmployeePayrollService employeePayrollServiceNew;
+		employeePayrollServiceNew = new EmployeePayrollService(payrollData);
+		employeePayrollServiceNew.writeEmployeePayrollData(IOService.FILE_IO);
+		long entries = employeePayrollService.countEntries(IOService.FILE_IO);
+		Assert.assertEquals(3, entries);
 	}
 }
